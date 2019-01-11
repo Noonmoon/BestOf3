@@ -1,15 +1,12 @@
-window.addEventListener("keydown", function(e) {
-  if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
-    e.preventDefault();
-  }
-}, false);
+var tron = function(s) {
 
-var sketch = function(s) {
-  var xFruit;
-  var yFruit;
   var button;
   var timer;
   var gameOver;
+  var snakeHeadXL;
+  var snakeHeadYL;
+  var snakeHeadXR;
+  var snakeHeadYR;
 
   // LEFT
   var numSegmentsL;
@@ -19,7 +16,6 @@ var sketch = function(s) {
   var diffL;
   var xCorL;
   var yCorL;
-  var playerElemL;
 
   // RIGHT
   var numSegmentsR;
@@ -29,59 +25,45 @@ var sketch = function(s) {
   var diffR;
   var xCorR;
   var yCorR;
-  var playerElemR;
+  var start;
+  var runCountL;
+  var runCountR;
 
   s.setup = function() {
+    runCounter++;
     s.createCanvas(1000, 500);
 
-    s.frameRate(20);
+    s.frameRate(30);
     s.stroke(255);
     s.strokeWeight(10);
-
-    playerElemL = s.createDiv().addClass('Lscore');
-    playerElemR = s.createDiv().addClass('Rscore');
 
     s.resetSketch()
   }
 
 
   s.resetSketch = function() {
-    playerElemL.html('Player 1')
-    playerElemR.html('Player 2')
-    $("#rematch").css('display', 'none');
+    $("#nextRound").css('display', 'none');
 
-    timer = 4;
-    xFruit= 0;
-    yFruit = 0;
+    timer = 3;
     gameOver = true;
+    start = false;
+    runCountL = 0;
+    runCountR = 0;
 
     // LEFT
-    numSegmentsL = 30;
+    numSegmentsL = 1;
     directionL = 'right';
-    xStartL = 10;
-    yStartL = 250;
     diffL = 10;
-    xCorL = [];
-    yCorL = [];
+    xCorL = [200];
+    yCorL = [250];
 
     // RIGHT
-    numSegmentsR = 30;
+    numSegmentsR = 1;
     directionR = 'left';
-    xStartR = 1000;
-    yStartR = 250;
     diffR = 10;
-    xCorR = [];
-    yCorR = [];
+    xCorR = [800];
+    yCorR = [250];
 
-    s.updateFruitCoordinates();
-    for (var i = 0; i < numSegmentsL; i++) {
-      xCorL.push(xStartL + (i * diffL));
-      yCorL.push(yStartL);
-    }
-    for (var o = 0; o < numSegmentsR; o++) {
-      xCorR.push(xStartR - (o * diffR));
-      yCorR.push(yStartR);
-    }
     s.draw()
     s.loop()
   }
@@ -92,13 +74,20 @@ var sketch = function(s) {
     s.textSize(100);
     s.text(timer, s.width/2, s.height/2);
 
-    if (s.frameCount % 15 == 0 && timer > 0) {
+    $("#start").unbind().click(function() {
+      start = true
+      $("#start").css('display', 'none')
+    })
+
+    if (s.frameCount % 30 == 0 && timer > 0 && start) {
       timer --;
     }
+
     if (timer == 0) {
       timer = ''
       gameOver = false;
     }
+
     if(!gameOver) {
       s.drawL()
       s.drawR()
@@ -112,7 +101,6 @@ var sketch = function(s) {
       s.line(xCorL[i], yCorL[i], xCorL[i + 1], yCorL[i + 1]);
     }
     s.updateSnakeCoordinatesL();
-    s.checkForFruitL();
   }
 
   s.drawR = function() {
@@ -121,14 +109,12 @@ var sketch = function(s) {
       s.line(xCorR[i], yCorR[i], xCorR[i + 1], yCorR[i + 1]);
     }
     s.updateSnakeCoordinatesR();
-    s.checkForFruitR();
   }
 
   s.updateSnakeCoordinatesL = function() {
-    for (var i = 0; i < numSegmentsL - 1; i++) {
-      xCorL[i] = xCorL[i + 1];
-      yCorL[i] = yCorL[i + 1];
-    }
+    numSegmentsL++
+    xCorL.push(xCorL[numSegmentsL.length - 1] + 1)
+    yCorL.push(yCorL[numSegmentsL.length - 1] + 1)
     switch (directionL) {
       case 'right':
         xCorL[numSegmentsL - 1] = xCorL[numSegmentsL - 2] + diffL;
@@ -150,10 +136,9 @@ var sketch = function(s) {
   }
 
   s.updateSnakeCoordinatesR = function() {
-    for (var i = 0; i < numSegmentsR - 1; i++) {
-      xCorR[i] = xCorR[i + 1];
-      yCorR[i] = yCorR[i + 1];
-    }
+    numSegmentsR++
+    xCorR.push(xCorR[numSegmentsR.length - 1] - 1)
+    yCorR.push(yCorR[numSegmentsR.length - 1] - 1)
     switch (directionR) {
       case 'right':
         xCorR[numSegmentsR - 1] = xCorR[numSegmentsR - 2] + diffR;
@@ -181,12 +166,23 @@ var sketch = function(s) {
         yCorL[yCorL.length - 1] < 0 ||
         s.checkSnakeCollisionL()) {
       s.noLoop();
-      gameOver = true;
-      playerElemR.html('Player 2 wins!');
-      $("#rematch").css('display', 'block');
-      $("#rematch").unbind().click(function() {
-        s.resetSketch()
+      runCountL++
+      $(".Rscore").html((Number($(".Rscore").text()) + 1))
+      $("#nextRound").css('display', 'block');
+      if (runCounter == 3) {
+        runCheck()
+        $("#nextRound").css('display', 'none');
+        s.remove()
+      }
+      $("#nextRound").unbind().click(function() {
+        s.remove()
+        startNewGame()
+        $("#nextRound").css('display', 'none');
       })
+      gameOver = true;
+      if (runCountL >= 2) {
+        $(".Rscore").html((Number($(".Rscore").text()) - 1))
+      }
     } else if (
         xCorR[xCorR.length - 1] > s.width ||
         xCorR[xCorR.length - 1] < 0 ||
@@ -194,73 +190,54 @@ var sketch = function(s) {
         yCorR[yCorR.length - 1] < 0 ||
         s.checkSnakeCollisionR()) {
       s.noLoop();
-      gameOver = true;
-      playerElemL.html('Player 1 wins!');
-      $("#rematch").css('display', 'block');
-      $("#rematch").unbind().click(function() {
-        s.resetSketch()
+      runCountR++
+      $(".Lscore").html((Number($(".Lscore").text()) + 1))
+      $("#nextRound").css('display', 'block');
+      if (runCounter == 3) {
+        runCheck()
+        $("#nextRound").css('display', 'none');
+        s.remove()
+      }
+      $("#nextRound").unbind().click(function() {
+        s.remove()
+        $("#nextRound").css('display', 'none');
+        startNewGame()
       })
+      gameOver = true;
+      if (runCountR >= 2) {
+        $(".Lscore").html((Number($(".Lscore").text()) - 1))
+      }
     }
   }
 
   s.checkSnakeCollisionL = function() {
-    s.snakeHeadXL = xCorL[xCorL.length - 1];
-    s.snakeHeadYL = yCorL[yCorL.length - 1];
+    snakeHeadXL = xCorL[xCorL.length - 1];
+    snakeHeadYL = yCorL[yCorL.length - 1];
     for (var i = 0; i < xCorL.length - 1; i++) {
-      if (xCorL[i] === s.snakeHeadXL && yCorL[i] === s.snakeHeadYL) {
+      if (xCorL[i] === snakeHeadXL && yCorL[i] === snakeHeadYL) {
         return true;
       }
     }
     for (var o = 0; o < yCorL.length - 1; o++) {
-      if (s.snakeHeadXL === xCorR[o] && s.snakeHeadYL === yCorR[o]) {
+      if (snakeHeadXL === xCorR[o] && snakeHeadYL === yCorR[o]) {
         return true;
       }
     }
   }
 
   s.checkSnakeCollisionR = function() {
-    s.snakeHeadXR = xCorR[xCorR.length - 1];
-    s.snakeHeadYR = yCorR[yCorR.length - 1];
+    snakeHeadXR = xCorR[xCorR.length - 1];
+    snakeHeadYR = yCorR[yCorR.length - 1];
     for (var i = 0; i < xCorR.length - 1; i++) {
-      if (xCorR[i] === s.snakeHeadXR && yCorR[i] === s.snakeHeadYR) {
+      if (xCorR[i] === snakeHeadXR && yCorR[i] === snakeHeadYR) {
         return true;
       }
     }
     for (var o = 0; o < yCorR.length - 1; o++) {
-      if (s.snakeHeadXR === xCorL[o] && s.snakeHeadYR === yCorL[o]) {
+      if (snakeHeadXR === xCorL[o] && snakeHeadYR === yCorL[o]) {
         return true;
       }
     }
-  }
-
-
-  s.checkForFruitL = function() {
-    s.stroke(200)
-    s.point(xFruit, yFruit);
-    if (xCorL[xCorL.length - 1] === xFruit && yCorL[yCorL.length - 1] === yFruit) {
-      xCorL.unshift(xCorL[0]);
-      yCorL.unshift(yCorL[0]);
-      numSegmentsL++;
-      s.updateFruitCoordinates();
-    }
-  }
-
-  s.checkForFruitR = function() {
-    s.stroke(200)
-    s.point(xFruit, yFruit);
-    if (xCorR[xCorR.length - 1] === xFruit && yCorR[yCorR.length - 1] === yFruit) {
-      xCorR.unshift(xCorR[0]);
-      yCorR.unshift(yCorR[0]);
-      numSegmentsR++;
-      s.updateFruitCoordinates();
-    }
-  }
-
-  // create one fruit spawn which both snakes can consume
-  s.updateFruitCoordinates = function() {
-    s.stroke(200)
-    xFruit = s.floor(s.random(10, (s.width - 100) / 10)) * 10;
-    yFruit = s.floor(s.random(10, (s.height - 100) / 10)) * 10;
   }
 
   s.keyPressed = function() {
@@ -307,5 +284,3 @@ var sketch = function(s) {
     }
   }
 };
-
-var snakeGame = new p5(sketch, 'bigContainer')

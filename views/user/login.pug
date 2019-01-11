@@ -6,6 +6,12 @@ block content
   body
     include ../nav.pug
 
+    - if (loginDidntWork) {
+    div.loginErrorCont
+      div.loginErrorMsg
+       h2.lem Login Unsuccessful
+    - }
+
     div.contain
       h1#title LOGIN
       form(action="/login" method="POST")

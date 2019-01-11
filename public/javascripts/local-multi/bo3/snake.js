@@ -1,10 +1,4 @@
-window.addEventListener("keydown", function(e) {
-  if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
-    e.preventDefault();
-  }
-}, false);
-
-var sketch = function(s) {
+var snake = function(s) {
   var xFruit;
   var yFruit;
   var button;
@@ -19,7 +13,7 @@ var sketch = function(s) {
   var diffL;
   var xCorL;
   var yCorL;
-  var playerElemL;
+
 
   // RIGHT
   var numSegmentsR;
@@ -29,31 +23,33 @@ var sketch = function(s) {
   var diffR;
   var xCorR;
   var yCorR;
-  var playerElemR;
+  var start;
+  var runCountL;
+  var runCountR;
 
   s.setup = function() {
+    runCounter++
     s.createCanvas(1000, 500);
 
     s.frameRate(20);
     s.stroke(255);
     s.strokeWeight(10);
 
-    playerElemL = s.createDiv().addClass('Lscore');
-    playerElemR = s.createDiv().addClass('Rscore');
-
     s.resetSketch()
+
   }
 
 
   s.resetSketch = function() {
-    playerElemL.html('Player 1')
-    playerElemR.html('Player 2')
-    $("#rematch").css('display', 'none');
+    $("#nextRound").css('display', 'none');
 
-    timer = 4;
+    timer = 3;
     xFruit= 0;
     yFruit = 0;
     gameOver = true;
+    start = false;
+    runCountL = 0;
+    runCountR = 0;
 
     // LEFT
     numSegmentsL = 30;
@@ -92,13 +88,20 @@ var sketch = function(s) {
     s.textSize(100);
     s.text(timer, s.width/2, s.height/2);
 
-    if (s.frameCount % 15 == 0 && timer > 0) {
+    $("#start").unbind().click(function() {
+      start = true
+      $("#start").css('display', 'none')
+    })
+
+    if (s.frameCount % 15 == 0 && timer > 0 && start) {
       timer --;
     }
+
     if (timer == 0) {
       timer = ''
       gameOver = false;
     }
+
     if(!gameOver) {
       s.drawL()
       s.drawR()
@@ -181,12 +184,23 @@ var sketch = function(s) {
         yCorL[yCorL.length - 1] < 0 ||
         s.checkSnakeCollisionL()) {
       s.noLoop();
+      runCountL++
       gameOver = true;
-      playerElemR.html('Player 2 wins!');
-      $("#rematch").css('display', 'block');
-      $("#rematch").unbind().click(function() {
-        s.resetSketch()
+      $(".Rscore").html((Number($(".Rscore").text()) + 1))
+      $("#nextRound").css('display', 'block');
+      if (runCounter == 3) {
+        runCheck()
+        $("#nextRound").css('display', 'none');
+        s.remove()
+      }
+      $("#nextRound").unbind().click(function() {
+        s.remove()
+        startNewGame()
+        $("#nextRound").css('display', 'none');
       })
+      if (runCountL >= 2) {
+        $(".Rscore").html((Number($(".Rscore").text()) - 1))
+      }
     } else if (
         xCorR[xCorR.length - 1] > s.width ||
         xCorR[xCorR.length - 1] < 0 ||
@@ -194,12 +208,23 @@ var sketch = function(s) {
         yCorR[yCorR.length - 1] < 0 ||
         s.checkSnakeCollisionR()) {
       s.noLoop();
+      runCountR++
       gameOver = true;
-      playerElemL.html('Player 1 wins!');
-      $("#rematch").css('display', 'block');
-      $("#rematch").unbind().click(function() {
-        s.resetSketch()
+      $(".Lscore").html((Number($(".Lscore").text()) + 1))
+      $("#nextRound").css('display', 'block');
+      if (runCounter == 3) {
+        $("#nextRound").css('display', 'none');
+        runCheck()
+        s.remove()
+      }
+      $("#nextRound").unbind().click(function() {
+        s.remove()
+        startNewGame()
+        $("#nextRound").css('display', 'none');
       })
+      if (runCountR >= 2) {
+        $(".Lscore").html((Number($(".Lscore").text()) - 1))
+      }
     }
   }
 
@@ -307,5 +332,3 @@ var sketch = function(s) {
     }
   }
 };
-
-var snakeGame = new p5(sketch, 'bigContainer')

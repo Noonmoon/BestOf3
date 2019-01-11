@@ -19,4 +19,6 @@ body{
   outline: 0 none;
 }
 
-
+div.controlsCont{
+  min-width: 266px;
+}

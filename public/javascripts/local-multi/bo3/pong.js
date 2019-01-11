@@ -1,14 +1,13 @@
 var pong = function(p){
-  let aiNum = 50;
-  let distance = 400;
   p.setup = function(){
+    p.noLoop()
+    $("#start").unbind().click(function() {
+      p.loop()
+      $("#start").css('display', 'none')
+    })
     p.keyArray = [];
-    p.score = p.createDiv('Goodluck!');
-    p.score.id = 'score';
-    p.score.style('color', 'black');
-    p.score.parent('scorecontainer');
     p.createCanvas(500, 500);
-    p.xspeedval = 1
+    p.xspeedval = Math.round(Math.random());
     if (p.xspeedval === 1) {
       p.xspeedval = Number(Math.random() * 3);
       if (p.xspeedval < 1 && p.xspeedval > 0) {
@@ -24,7 +23,7 @@ var pong = function(p){
       x: p.width/2,
       y: p.height/2,
       xspeed: p.xspeedval,
-      yspeed: 2.5,
+      yspeed: 5,
       r: 12,
       gameover: false,
 
@@ -33,25 +32,18 @@ var pong = function(p){
         p.ellipse(this.x, this.y, this.r*2, this.r*2);
       },
 
-      handleAiReaction: function(){
-          let puckXRounded = Math.round(this.x);
-          aiNum = Math.round(Math.random() * 100);
-          distance = (p.PaddleRight.x - p.PaddleRight.w/2) - (p.Puck.x);
-        },
-
       checkPaddle: function(){
-        if (this.x + this.r > p.PaddleRight.x - p.PaddleRight.w/2 &&
+        if (this.x + this.r >= p.PaddleRight.x - p.PaddleRight.w/2 &&
             this.y > p.PaddleRight.y - p.PaddleRight.h/2 &&
             this.y < p.PaddleRight.y + p.PaddleRight.h/2) {
-          this.xspeed *= -1.05;
-        } else if (this.x - this.r < p.PaddleLeft.x + p.PaddleLeft.w/2 &&
+          this.xspeed *= -1.1;
+        } else if (this.x - this.r <= p.PaddleLeft.x + p.PaddleLeft.w/2 &&
                    this.y > p.PaddleLeft.y - p.PaddleLeft.h/2 &&
                    this.y < p.PaddleLeft.y + p.PaddleLeft.h/2) {
-          this.xspeed *= -1.05;
-          this.handleAiReaction();
-        } else if (this.x + this.r > p.PaddleRight.x - p.PaddleRight.w/2 + 20) {
+          this.xspeed *= -1.1;
+        } else if (this.x + this.r > p.PaddleRight.x - p.PaddleRight.w/2) {
           this.gameover = 'leftwin';
-        } else if (this.x - this.r < p.PaddleLeft.x + p.PaddleLeft.w/2 - 20){
+        } else if (this.x - this.r < p.PaddleLeft.x + p.PaddleLeft.w/2){
           this.gameover = 'rightwin';
         }
       },
@@ -131,50 +123,49 @@ var pong = function(p){
         }
       },
 
-      move: function(yval){
-        this.y = yval;
+      move: function(steps){
+        this.ychange = steps;
       }
     };
 
-    p.draw = function(){
-
-      //4 possibilities
-      //~70% perfect
-      //~10% on top half
-      //~10% on bottom half
-      //~10% completely off
-
-      p.checkAiFailure = function(){
-        if (aiNum < 70) {
-          return p.Puck.y;
-        } else if (aiNum  < 80){
-          return p.Puck.y + p.getAiPaddleGradualAni(30);
-        } else if (aiNum  < 90) {
-          return p.Puck.y - p.getAiPaddleGradualAni(30);
-        } else if (aiNum <= 100) {
-          if (aiNum < 97) {
-            return p.Puck.y - p.getAiPaddleGradualAni(60);
-          } else {
-            return p.Puck.y + p.getAiPaddleGradualAni(60);
-          }
+    p.checkGameStatus = function() {
+      if (p.Puck.gameover === 'leftwin') {
+        p.noLoop()
+        runCounter++;
+        $(".Lscore").html((Number($(".Lscore").text()) + 1))
+        $("#nextRound").css('display', 'block');
+        if (runCounter == 3) {
+          $("#nextRound").css('display', 'none');
+          p.remove()
         }
-      };
+        $("#nextRound").unbind().click(function() {
+          p.remove()
+          $("#nextRound").css('display', 'none');
+          startNewGame()
+        })
+      } else if (p.Puck.gameover === 'rightwin') {
+        p.noLoop()
+        runCounter++;
+        $(".Rscore").html((Number($(".Rscore").text()) + 1))
+        $("#nextRound").css('display', 'block');
+        if (runCounter == 3) {
+          $("#nextRound").css('display', 'none');
+          p.remove()
+        }
+        $("#nextRound").unbind().click(function() {
+          p.remove()
+          $("#nextRound").css('display', 'none');
+          startNewGame()
+        })
+      }
+    }
 
-      p.getAiPaddleGradualAni = function(endpoint){
-        let result = (p.Puck.x/distance) * endpoint;
-        return result;
-      };
-
+    p.draw = function(){
       p.background(37, 40, 57);
       p.left = p.PaddleLeft;
       p.right = p.PaddleRight;
-      if (p.Puck.gameover === 'leftwin') {
-        p.score.html('Left Wins!');
-        return;
-      } else if (p.Puck.gameover === 'rightwin') {
-        p.score.html('Right Wins!');
-        return;
-      }
+      p.checkGameStatus()
+
       p.left.createPaddle(true);
       p.right.createPaddle(false);
       p.left.show();
@@ -186,17 +177,24 @@ var pong = function(p){
       p.Puck.update();
       p.Puck.edges();
       p.keyArray.map(function(key) {
-        if (key == 65) {
+        if (key == 75) {
+          p.right.move(-10);
+        } else if (key == 77) {
+          p.right.move(10);
+        } else if (key == 65) {
           p.left.move(-10);
         } else if (key == 90) {
           p.left.move(10);
+        } else if (key == 's75'){
+          p.right.move(0);
+        } else if (key == 's77') {
+          p.right.move(0);
         } else if (key == 's65'){
           p.left.move(0);
         } else if (key == 's90') {
           p.left.move(0);
         }
       });
-      p.right.move(p.checkAiFailure());
 
       p.keyReleased = function() {
         p.keyArray.push('s'+p.keyCode);
@@ -208,5 +206,3 @@ var pong = function(p){
     };
   };
 };
-
-var pongGame = new p5(pong, 'scorecontainer');
