@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "animejs": "^2.2.0",
-    "bcrypt": "~1.0.3",
+    "bcrypt": "^2.0.0",
     "body-parser": "^1.18.3",
     "debug": "~2.6.9",
     "express": "~4.16.0",
