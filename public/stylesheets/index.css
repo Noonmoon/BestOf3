@@ -1,40 +1,36 @@
 body, html{
-  background: -moz-linear-gradient(top, #F2B632 5%, #EF4937 100%);
-  background: -webkit-linear-gradient(top, #F2B632 5%,#EF4937 100%);
-  background: linear-gradient(to bottom, #F2B632 5%,#EF4937 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#424b54', endColorstr='#fff9f7',GradientType=0 );
   z-index: -2;
+  background-color: #f3ece4;
 }
 
 body{
   z-index: 0;
 }
 
-#indextitle{
+header {
+  background-color: #2b2a2e;
+  height: 8vh;
+  margin-bottom: 5rem;
+  z-index: 2;
+}
+
+#indexTitle{
   font-family: 'alienS';
   float: left;
   letter-spacing: 5px;
-  font-size: 70px;
+  font-size: 45px;
   color: #C9C9CA;
-  padding-top: 20px;
-  margin-left: 10px;
-}
-
-.title {
-  background-color: #262838;
-  height: 110px;
-  margin-bottom: 100px;
-  position: relative;
-  z-index: 2;
-  min-width: 565px;
+  margin: 0.9rem;
 }
 
 .logo{
-  margin-top: 8px;
   float: left;
-  text-align: center;
-  width: 161.50px;
-  height: 92.5px;
+  height: 8vh;
+}
+
+.branding {
+  width: 100%;
+  height: 100%;
 }
 
 #signup{
@@ -100,6 +96,7 @@ body{
 
 div.contain{
   z-index: 2;
+  margin: 2.5rem;
 }
 
 div{

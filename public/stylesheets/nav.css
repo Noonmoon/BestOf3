@@ -1,37 +1,29 @@
 .navbar{
-  height: 75px;
-  background-color: #252839;
+  /* height: 8vh; */
+  background-color: #2b2a2e;
   display: flex;
+  z-index: 2;
+  color: #f7f1ea;
+  padding: 0;
 }
 
-.home {
-  font-family: 'alienS';
-  font-size: 40px;
-  color: #B5B5B7;
-  margin-top: 6px;
+.navbar-brand {
+  margin-left: 1rem;
 }
 
-.home:hover {
-  color: #fff;
-}
-
-img{
-  width: 130px;
-  height: 70px;
-}
-
-#logout{
-  margin-top: 10px;
+.navbar img{
+  width: 100px;
 }
 
 #login, #logout, #register ,#stats{
-  color: #B5B5B7;
-  margin: 10px;
+  color: #f7f1eade;
+  margin: 1rem;
+  text-decoration: none;
+  font-size: 1.2rem;
 }
 
 #login:hover, #logout:hover, #register:hover, #stats:hover{
   color: #fff;
-  background-color: inherit;
 }
 
 span.exp, span.lvl, span.email{

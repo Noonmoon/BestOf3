@@ -1,10 +1,7 @@
-body{
-  font-family: 'Press Start 2P', sans-serif;
-  background: -moz-linear-gradient(top, #F2B632 5%, #EF4937 100%);
-  background: -webkit-linear-gradient(top, #F2B632 5%,#EF4937 100%);
-  background: linear-gradient(to bottom, #F2B632 5%,#EF4937 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#424b54', endColorstr='#fff9f7',GradientType=0 );
-}
+@import url('https://fonts.googleapis.com/css?family=Arvo|Merriweather');
+@import url('https://fonts.googleapis.com/css?family=Montserrat');
+
+
 @font-face {
     font-family: "alienS";
     src:url("/fonts/SFAlienEncountersSolid.ttf");
@@ -12,6 +9,12 @@ body{
 @font-face {
     font-family: "alien";
     src:url("/fonts/SFAlienEncounters.ttf");
+}
+
+
+body{
+  font-family: 'Montserrat';
+  background-color: #f3ece4;
 }
 #playagain:focus, #single:focus, #multi:focus{
   background-color: rgb(151,26,57);
