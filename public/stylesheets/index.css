@@ -49,10 +49,10 @@ header {
   box-shadow: inset 0px 0px 12px 0px rgba(0,0,0,0.63);
 }
 #bo3 {
-  margin: 20px;
+  padding: 8px 16px;
+  margin-bottom: 2rem;
+  margin-top: 1rem;
   border-radius: 5px;
-  width: 220px;
-  height: 65px;
   font-size: 24px;
   color: #343641;
   background-color: #F2B632;
@@ -94,24 +94,17 @@ header {
   z-index: 2;
 }
 
-div.contain{
-  z-index: 2;
-  margin: 2.5rem;
-}
-
 div{
   z-index: 2;
 }
 
 .contain{
   text-align: center;
-  max-width: 1000px;
-  margin: 50px auto;
-  border-style: solid;
+  margin: 50px 10%;
   background-color: #C9C9CA;
-  box-shadow: 0px 0px 40px 16px rgba(0,0,0,0.22);
-  position: relative;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
   z-index: 2;
+  height: auto;
 }
 
 h2.gameName{
