@@ -1,27 +1,39 @@
-# BestOf3
-70s modern fusion arcade that offers Single, Multiplayer Local, and Online play utilizing Socket.io and p5.js. Can't agree? Settle it with BestOf3!
+# Best Of 3
 
-## Features
-- Play Online Games against your Friends
-- User Authentication (and Experience Points * )
-- Browse a Selection of Single Player games each with configurable Computer AIs to face off against
+Best of 3 was a final project created to provide a fun solution to solving a debate or argument with friends. It is an
+online multiplayer arcade where you face off in 3 rounds of random games made with p5.js. I was responsible for all
+programming and front-end development such as networking, game development, UX, design and feature
+implementation.
 
-## Game Lists
+## Getting Started
 
-### Single
-- Snake
-- Pong
-- Asteroid *
-- Space Invaders *
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
-### Local Multiplayer
-- Snake
-- Pong
-- Asteroid *
-- Space Invaders *
+1. Clone or download project to your computer
+2. Run npm install and then npm start
+3. Proceed to localhost:3000/
+4. Sign in with username and *****
 
-### Online
-- Snake
-- Pong *
-- Asteroid *
-- Space Invaders *
+
+## Built With
+
+* [p5.js](https://p5js.org/) - JS library for creating simple canavas games
+* [socket.io](https://socket.io/) - Used for client networking
+* [Node.js](https://nodejs.org/en/) 
+* [PostgreSQL](https://rometools.github.io/rome/)
+
+## Demo
+
+
+
+## Authors
+
+* **Ashton Hauser** - *Backend* - [ashtonhauser](https://github.com/ashtonhauser)
+
+See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+
+
