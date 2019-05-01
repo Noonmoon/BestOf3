@@ -34,7 +34,7 @@ https://photos.google.com/share/AF1QipMGSb2UAkQdcoXfTzn1JU0xW1uNo4ivBSrUvUGTueUE
 
 * **Ashton Hauser** - *Backend* - [ashtonhauser](https://github.com/ashtonhauser)
 
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
+See also the list of [contributors](https://github.com/Noonmoon/BestOf3/contributors) who participated in this project.
 
 ## License
 
